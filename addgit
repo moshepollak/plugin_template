@@ -12,8 +12,7 @@ if ($argv && $argv[1]) {
         if(is_dir($file)){
             continue;
         } 
-        $file_name = castom_replase($plugin_name , $file );
-        rename($file, $file_name);
+    
         try {
             $old = file_get_contents($file);
             $str = castom_replase($plugin_name , $old );
@@ -22,6 +21,23 @@ if ($argv && $argv[1]) {
             }
         } catch (\Exception $e) {
             echo $e->getMessage();
+        }
+    }
+
+    foreach ($data as $file){
+        if(basename($file) === "addgit" )
+        continue;
+        if(is_dir($file)){
+            continue;
+        } 
+    
+        $file_name = castom_replase($plugin_name , $file );
+        try {
+            rename($file, $file_name);
+            $file = $file_name;
+
+        } catch (\Exception $e) {
+            echo "cant chsmge name";
         }
     }
 }
