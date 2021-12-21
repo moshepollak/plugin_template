@@ -33,12 +33,13 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Find and Replace
+    - name: Find and Replace plugin name display
       uses: jacobtomlinson/gha-find-replace@v2
       with:
         find: "display_name_replace"
         replace: ${{github.event.inputs.displayname}}
         regex: false
+    - name: Find and Replace discrioption
       uses: jacobtomlinson/gha-find-replace@v2
       with:
         find: "description_replace"
