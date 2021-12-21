@@ -11,6 +11,20 @@ on:
         default: ''
         # Input has to be provided for the workflow to run
         required: true
+      displayname:
+        # Friendly description to be shown in the UI instead of 'name'
+        description: 'Display Name'
+        # Default value if no value is explicitly provided
+        default: ''
+        # Input has to be provided for the workflow to run
+        required: true
+      description:
+        # Friendly description to be shown in the UI instead of 'name'
+        description: 'description'
+        # Default value if no value is explicitly provided
+        default: ''
+        # Input has to be provided for the workflow to run
+        required: false
 
 jobs:
   build:
@@ -19,10 +33,19 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: run get location
-      run: pwd
+    - name: Find and Replace
+      uses: jacobtomlinson/gha-find-replace@v2
+      with:
+        find: "display_name_replace"
+        replace: ${{github.event.inputs.displayname}}
+        regex: false
+      uses: jacobtomlinson/gha-find-replace@v2
+      with:
+        find: "description_replace"
+        replace: ${{github.event.inputs.description}}
+        regex: false
     - name: run add git
-      run: sudo php addgit ${{github.event.inputs.name}}
+      run: sudo php addgit ${{github.event.inputs.name}}  
     - name: give list
       run: ls -r
     - name: Commit report
