@@ -88,7 +88,7 @@ class Replace_name {
 			$this->get_plugin_name(), 
 			$this->get_version() ,
 			 "moshepollak",
-			 "1ed44e8673e8c260bbf60b0dfaba2672dea48e15"
+			 "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"
 			 //	"tziki-webduck",
 			 // "1ed44e8673e8c260bbf60b0dfaba2672dea48e15"
 		);
