@@ -3,11 +3,11 @@
 /**
  * Register all actions and filters for the plugin
  *
- * @link       avitrop
+ * @link       Webduck
  * @since      1.0.0
  *
- * @package    Noti_woo
- * @subpackage Noti_woo/includes
+ * @package    Replace_name
+ * @subpackage Replace_name/includes
  */
 
 /**
@@ -17,29 +17,97 @@
  * the plugin, and register them with the WordPress API. Call the
  * run function to execute the list of actions and filters.
  *
- * @package    Noti_woo
- * @subpackage Noti_woo/includes
- * @author     avitrop <Avitrop@gmail.com>
+ * @package    Replace_name
+ * @subpackage Replace_name/includes
+ * @author     Webduck <office@webduck.co.il>
  */
-class WebDuckUpdater
+class WebDuckUpdater_replace_name
 {
 
 	private $plugin_name;
 	private $version;
 
+    private $file;
+
+	private $plugin;
+
+	private $basename;
+
+	private $active;
+
+	private $username;
+
+	private $repository;
+
+	private $authorize_token;
+
+	private $github_response;
    
-    public function __construct( $plugin_name, $version)
+    public function __construct( $plugin_name, $version , $git_user_name = "" ,$git_auth)
     {
+
+
         $this->plugin_name = $plugin_name;
-		$this->version = $version;
+        $this->version = $version;
+        $this->set_username( $git_user_name );
+        $this->set_repository( $this->plugin_name );
+        $this->authorize( $git_auth );
+        $this->file =  plugin_dir_path(dirname(__FILE__)) . $this->plugin_name . ".php";
+
+        add_action( 'admin_init', array( $this, 'set_plugin_properties' ) );
+
         add_filter('plugins_api', [$this,'plugin_info'], 999, 3);
         add_filter('site_transient_update_plugins', [$this, 'push_update']);
         add_action('upgrader_process_complete', [$this,'after_update'], 10, 2);
         add_filter('plugin_row_meta', [$this, 'plugin_row_meta' ], 10, 2);
+        add_filter( 'upgrader_pre_download',
+            function() {
+                add_filter( 'http_request_args', [ $this, 'download_package' ], 15, 2 );
+                return false; // upgrader_pre_download filter default return value.
+            }
+        
+       );
+        add_filter( 'upgrader_post_install', array( $this, 'after_install' ), 10, 3 );
     }
+    public function set_plugin_properties() {
+		$this->plugin	= get_plugin_data( $this->file );
+		$this->basename = plugin_basename( $this->file );
+		$this->active	= is_plugin_active( $this->basename );
+	}
+    private function get_repository_info() {
+	    if ( is_null( $this->github_response ) ) { // Do we have a response?
+		$args = array();
+	        $request_uri = sprintf( 'https://api.github.com/repos/%s/%s/releases', $this->username, $this->repository ); // Build URI
+		    
+		$args = array();
+
+	        if( $this->authorize_token ) { // Is there an access token?
+		          $args['headers']['Authorization'] = "token {$this->authorize_token}"; // Set the headers
+	        }
+
+	        $response = json_decode( wp_remote_retrieve_body( wp_remote_get( $request_uri, $args ) ), true ); // Get JSON and parse it
+
+	        if( is_array( $response ) ) { // If it is an array
+	            $response = current( $response ); // Get the first item
+	        }
+
+	        return $response; // Set it to our property
+	    }
+	}
+    public function set_username( $username ) {
+		$this->username = $username;
+	}
+
+	public function set_repository( $repository ) {
+		$this->repository = $repository;
+	}
+
+	public function authorize( $token ) {
+		$this->authorize_token = $token;
+	}
     public function plugin_row_meta($plugin_meta, $plugin_file)
     {
-        if ($this->plugin_name. "/" . $this->plugin_name . ".php" === $plugin_file) {
+        if (	$this->basename === $plugin_file) {
             $plugin_slug = $this->plugin_name;
             $plugin_name = __('Noti', $this->plugin_name);
     
@@ -74,49 +142,39 @@ class WebDuckUpdater
             
 
             // info.json is the file with the actual plugin information on your server
-            $remote = wp_remote_get(
-                'http://plugins.webduck.co.il/plugins/'.$this->plugin_name.'/'.$this->plugin_name.'.json',['timeout' => 40 ]       
+            // $remote = wp_remote_get(
+            //     'http://plugins.webduck.co.il/plugins/'.$this->plugin_name.'/'.$this->plugin_name.'.json',['timeout' => 40 ]       
+            // );
+            $remote = $this->get_repository_info();
+     
+            
+        if (! is_wp_error($remote) ) {
+            
+            $plugin = array(
+                'name'				=> $this->plugin["Name"],
+                'slug'				=> $this->basename,
+                'requires'					=> '3.3',
+                'tested'						=> '4.4.1',
+                'rating'						=> '100.0',
+                'num_ratings'				=> '10823',
+                'downloaded'				=> '14249',
+                'added'							=> '2016-01-05',
+                'version'			=> $remote['tag_name'],
+                'author'			=> $this->plugin["AuthorName"],
+                'author_profile'	=> $this->plugin["AuthorURI"],
+                'last_updated'		=> $remote['published_at'],
+                'homepage'			=> $this->plugin["PluginURI"],
+                'short_description' => $this->plugin["Description"],
+                'sections'			=> array(
+                    'Description'	=> $this->plugin["Description"],
+                    'Updates'		=> $remote['body'],
+                ),
+                'download_link'		=> $remote['zipball_url']
             );
-            
-            if (! is_wp_error($remote) && isset($remote['response']['code']) && $remote['response']['code'] == 200 && ! empty($remote['body'])) {
-                set_transient('misha_upgrade_' . $plugin_slug, $remote, 43200); // 12 hours cache
-            }
-      //  }
-            
-        if (! is_wp_error($remote) && isset($remote['response']['code']) && $remote['response']['code'] == 200 && ! empty($remote['body'])) {
-            $remote = json_decode($remote['body']);
-            $res = new stdClass();
-            
-            $res->name = $remote->name;
-            $res->slug = $plugin_slug;
-            $res->version = $remote->version;
-            $res->tested = $remote->tested;
-            $res->requires = $remote->requires;
-            $res->author = '<a href="https://webduck.co.il">webduck</a>';
-            $res->author_profile = 'https://webduck.co.il';
-            $res->download_link = $remote->download_url;
-            $res->trunk = $remote->download_url;
-            $res->requires_php = '5.3';
-            $res->last_updated = $remote->last_updated;
-            $res->sections = array(
-                        'description' => $remote->sections->description,
-                        'installation' => $remote->sections->installation,
-                        'changelog' => $remote->sections->changelog
-                        // you can add your custom sections (tabs) here
-                    );
-            
-            // in case you want the screenshots tab, use the following HTML format for its content:
-            // <ol><li><a href="IMG_URL" target="_blank"><img src="IMG_URL" alt="CAPTION" /></a><p>CAPTION</p></li></ol>
-            if (!empty($remote->sections->screenshots)) {
-                $res->sections['screenshots'] = $remote->sections->screenshots;
-            }
-            
-                   
-            $res->banners = array(
-                'low' => 'https://webduck.co.il/wp-content/uploads/2018/06/cropped-Untitled-1-1024x302.png',
-                'high' => 'https://webduck.co.il/wp-content/uploads/2018/06/cropped-Untitled-1-1024x302.png'
-            );
-            return $res;
+            set_transient('misha_upgrade_' . $plugin_slug, $plugin, 43200); // 12 hours cache
+
+            return (object) $plugin; // Return the data
+  
         }
             
         return false;
@@ -127,44 +185,57 @@ class WebDuckUpdater
             return $transient;
         }
              
-        // trying to get from cache first, to disable cache comment 10,20,21,22,24
         if (false == $remote = get_transient('misha_upgrade_'.$this->plugin_name)) {
-             
-                    // info.json is the file with the actual plugin information on your server
-            $remote = wp_remote_get(
-                'http://plugins.webduck.co.il/plugins/'.$this->plugin_name.'/'.$this->plugin_name.'.json',
-                array(
-                        'timeout' => 10,
-                     )
-            );
-             
-            if (!is_wp_error($remote) && isset($remote['response']['code']) && $remote['response']['code'] == 200 && !empty($remote['body'])) {
-                set_transient('misha_upgrade_'.$this->plugin_name, $remote, 43200); // 12 hours cache
-            }
+                   
+            $remote = $this->get_repository_info();
+			set_transient('misha_upgrade_'.$this->plugin_name, $remote, 43200); // 12 hours cache
+
         }
              
-        if ($remote && !is_wp_error($remote) ) {
-            $remote = json_decode($remote['body']);
-             
-            // your installed plugin version should be on the line below! You can obtain it dynamically of course
-            if ($remote && version_compare($this->version, $remote->version, '<') && version_compare($remote->requires, get_bloginfo('version'), '<')) {
+
+        if ($remote && version_compare($this->version, $remote['version'], '<') ) {
+
+                $remote['plugin'] = 	$this->basename; // it could be just YOUR_PLUGIN_SLUG.php if your plugin doesn't have its own directory
                 $res = new stdClass();
                 $res->slug = $this->plugin_name;
-                $res->plugin = $this->plugin_name.'/'.$this->plugin_name.'.php'; // it could be just YOUR_PLUGIN_SLUG.php if your plugin doesn't have its own directory
-                $res->new_version = $remote->version;
-                $res->tested = $remote->tested;
-                $res->package = $remote->download_url;
-                $transient->response[$res->plugin] = $res;
-                //$transient->checked[$res->plugin] = $remote->version;
-            }
+                $res->plugin = 	$this->basename; // it could be just YOUR_PLUGIN_SLUG.php if your plugin doesn't have its own directory
+                $res->new_version = $remote['version'];
+                $res->tested = $remote['tested'];
+                $res->package = $remote['download_link'];
+                $transient->response[$remote['plugin']] = (object) $res;
         }
-        return $transient;
+        
+        return  $transient;
     }
     public function after_update($upgrader_object, $options)
     {
         if ($options['action'] == 'update' && $options['type'] === 'plugin') {
-            // just clean the cache when new plugin version is installed
             delete_transient('misha_upgrade_'.$this->plugin_name);
         }
     }
+    public function download_package( $args, $url ) {
+
+		if ( null !== $args['filename'] ) {
+			if( $this->authorize_token ) { 
+				$args = array_merge( $args, array( "headers" => array( "Authorization" => "token {$this->authorize_token}" ) ) );
+			}
+		}
+		
+		remove_filter( 'http_request_args', [ $this, 'download_package' ] );
+
+		return $args;
+    }
+    public function after_install( $response, $hook_extra, $result ) {
+		global $wp_filesystem; // Get global FS object
+
+		$install_directory = plugin_dir_path( $this->file ); // Our plugin directory
+		$wp_filesystem->move( $result['destination'], $install_directory ); // Move files to the plugin dir
+		$result['destination'] = $install_directory; // Set the destination for the rest of the stack
+
+		if ( $this->active ) { // If it was active
+			activate_plugin( $this->basename ); // Reactivate
+		}
+
+		return $result;
+	}
 }
