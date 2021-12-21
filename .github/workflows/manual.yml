@@ -32,5 +32,5 @@ jobs:
         git config --global user.name 'tziki-webduck'
         git config --global user.email 'tziki@webduck.co.il'
         git add .
-        git commit -am "Automated report"
+        git commit -m "Automated report"
         git push
