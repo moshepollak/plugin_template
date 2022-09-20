@@ -1,4 +1,4 @@
-name: PHP Composer
+name: PUBLISH NEW MAGICALE WD PLUGIN
 
 on:
   workflow_dispatch:
