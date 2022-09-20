@@ -78,7 +78,7 @@ class Replace_name {
 		$this->set_locale();
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
-		$this->add_updater();
+// 		$this->add_updater();
 
 
 	}
