@@ -9,8 +9,8 @@
  * @link       WebDuck
  * @since      1.0.0
  *
- * @package    Replace_name
- * @subpackage Replace_name/includes
+ * @package    Yemot
+ * @subpackage Yemot/includes
  */
 
 /**
@@ -20,11 +20,11 @@
  * so that it is ready for translation.
  *
  * @since      1.0.0
- * @package    Replace_name
- * @subpackage Replace_name/includes
+ * @package    Yemot
+ * @subpackage Yemot/includes
  * @author     WebDuck <office@webduck.co.il>
  */
-class Replace_name_i18n {
+class Yemot_i18n {
 
 
 	/**
@@ -35,7 +35,7 @@ class Replace_name_i18n {
 	public function load_plugin_textdomain() {
 
 		load_plugin_textdomain(
-			'replace_name',
+			'yemot',
 			false,
 			dirname( dirname( plugin_basename( __FILE__ ) ) ) . '/languages/'
 		);

@@ -6,8 +6,8 @@
  * @link       WebDuck
  * @since      1.0.0
  *
- * @package    Replace_name
- * @subpackage Replace_name/includes
+ * @package    Yemot
+ * @subpackage Yemot/includes
  */
 
 /**
@@ -16,11 +16,11 @@
  * This class defines all code necessary to run during the plugin's activation.
  *
  * @since      1.0.0
- * @package    Replace_name
- * @subpackage Replace_name/includes
+ * @package    Yemot
+ * @subpackage Yemot/includes
  * @author     WebDuck <office@webduck.co.il>
  */
-class Replace_name_Activator {
+class Yemot_Activator {
 
 	/**
 	 * Short Description. (use period)
@@ -32,7 +32,7 @@ class Replace_name_Activator {
 	public static function activate() {
 		
 		$args = ["url" => get_site_url()];
-		$res = wp_remote_post("http://plugins.webduck.co.il/plugins/replace_name/hook_activation.php", array(
+		$res = wp_remote_post("http://plugins.webduck.co.il/plugins/yemot/hook_activation.php", array(
 			'headers'     => array('Content-Type' => 'application/json; charset=utf-8'),
 			'body'        => json_encode($args),
 			'method'      => 'POST',

@@ -10,18 +10,18 @@
  *
  * @link              WebDuck
  * @since             1.0.0
- * @package           Replace_name
+ * @package           Yemot
  *
  * @wordpress-plugin
- * Plugin Name:       display_name_replace
- * Plugin URI:        replace_name
- * Description:       description_replace.
+ * Plugin Name:       סנכרון ימות המשיח לטופס אלמנטור
+ * Plugin URI:        yemot
+ * Description:       כנל.
  * Version:           1.0.0
  * Author:            WebDuck
  * Author URI:        WebDuck
  * License:           All rights reserved © WebDuck 2020
  * License URI:       http://webduck.co.il
- * Text Domain:       replace_name
+ * Text Domain:       yemot
  * Domain Path:       /languages
  */
 
@@ -35,34 +35,34 @@ if ( ! defined( 'WPINC' ) ) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'REPLACE_NAME_VERSION', '1.0.0' );
+define( 'YEMOT_VERSION', '1.0.0' );
 
 /**
  * The code that runs during plugin activation.
- * This action is documented in includes/class-replace_name-activator.php
+ * This action is documented in includes/class-yemot-activator.php
  */
-function activate_replace_name() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-replace_name-activator.php';
-	Replace_name_Activator::activate();
+function activate_yemot() {
+	require_once plugin_dir_path( __FILE__ ) . 'includes/class-yemot-activator.php';
+	Yemot_Activator::activate();
 }
 
 /**
  * The code that runs during plugin deactivation.
- * This action is documented in includes/class-replace_name-deactivator.php
+ * This action is documented in includes/class-yemot-deactivator.php
  */
-function deactivate_replace_name() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-replace_name-deactivator.php';
-	Replace_name_Deactivator::deactivate();
+function deactivate_yemot() {
+	require_once plugin_dir_path( __FILE__ ) . 'includes/class-yemot-deactivator.php';
+	Yemot_Deactivator::deactivate();
 }
 
-register_activation_hook( __FILE__, 'activate_replace_name' );
-register_deactivation_hook( __FILE__, 'deactivate_replace_name' );
+register_activation_hook( __FILE__, 'activate_yemot' );
+register_deactivation_hook( __FILE__, 'deactivate_yemot' );
 
 /**
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
  */
-require plugin_dir_path( __FILE__ ) . 'includes/class-replace_name.php';
+require plugin_dir_path( __FILE__ ) . 'includes/class-yemot.php';
 
 /**
  * Begins execution of the plugin.
@@ -73,10 +73,10 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-replace_name.php';
  *
  * @since    1.0.0
  */
-function run_replace_name() {
+function run_yemot() {
 
-	$plugin = new Replace_name();
+	$plugin = new Yemot();
 	$plugin->run();
 
 }
-run_replace_name();
+run_yemot();

@@ -6,8 +6,8 @@
  * @link       WebDuck
  * @since      1.0.0
  *
- * @package    Replace_name
- * @subpackage Replace_name/includes
+ * @package    Yemot
+ * @subpackage Yemot/includes
  */
 
 /**
@@ -17,11 +17,11 @@
  * the plugin, and register them with the WordPress API. Call the
  * run function to execute the list of actions and filters.
  *
- * @package    Replace_name
- * @subpackage Replace_name/includes
+ * @package    Yemot
+ * @subpackage Yemot/includes
  * @author     WebDuck <office@webduck.co.il>
  */
-class Replace_name_Loader {
+class Yemot_Loader {
 
 	/**
 	 * The array of actions registered with WordPress.

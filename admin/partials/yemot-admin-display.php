@@ -8,8 +8,8 @@
  * @link       WebDuck
  * @since      1.0.0
  *
- * @package    Replace_name
- * @subpackage Replace_name/admin/partials
+ * @package    Yemot
+ * @subpackage Yemot/admin/partials
  */
 ?>
 

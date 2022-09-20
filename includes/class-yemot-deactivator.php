@@ -6,8 +6,8 @@
  * @link       WebDuck
  * @since      1.0.0
  *
- * @package    Replace_name
- * @subpackage Replace_name/includes
+ * @package    Yemot
+ * @subpackage Yemot/includes
  */
 
 /**
@@ -16,11 +16,11 @@
  * This class defines all code necessary to run during the plugin's deactivation.
  *
  * @since      1.0.0
- * @package    Replace_name
- * @subpackage Replace_name/includes
+ * @package    Yemot
+ * @subpackage Yemot/includes
  * @author     WebDuck <office@webduck.co.il>
  */
-class Replace_name_Deactivator {
+class Yemot_Deactivator {
 
 	/**
 	 * Short Description. (use period)

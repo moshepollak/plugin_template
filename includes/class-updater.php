@@ -6,8 +6,8 @@
  * @link       Webduck
  * @since      1.0.0
  *
- * @package    Replace_name
- * @subpackage Replace_name/includes
+ * @package    Yemot
+ * @subpackage Yemot/includes
  */
 
 /**
@@ -17,11 +17,11 @@
  * the plugin, and register them with the WordPress API. Call the
  * run function to execute the list of actions and filters.
  *
- * @package    Replace_name
- * @subpackage Replace_name/includes
+ * @package    Yemot
+ * @subpackage Yemot/includes
  * @author     Webduck <office@webduck.co.il>
  */
-class WebDuckUpdater_replace_name
+class WebDuckUpdater_yemot_yemot_yemot
 {
 
 	private $plugin_name;

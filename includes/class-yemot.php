@@ -9,8 +9,8 @@
  * @link       WebDuck
  * @since      1.0.0
  *
- * @package    Replace_name
- * @subpackage Replace_name/includes
+ * @package    Yemot
+ * @subpackage Yemot/includes
  */
 
 /**
@@ -23,11 +23,11 @@
  * version of the plugin.
  *
  * @since      1.0.0
- * @package    Replace_name
- * @subpackage Replace_name/includes
+ * @package    Yemot
+ * @subpackage Yemot/includes
  * @author     WebDuck <office@webduck.co.il>
  */
-class Replace_name {
+class Yemot {
 
 	/**
 	 * The loader that's responsible for maintaining and registering all hooks that power
@@ -35,7 +35,7 @@ class Replace_name {
 	 *
 	 * @since    1.0.0
 	 * @access   protected
-	 * @var      Replace_name_Loader    $loader    Maintains and registers all hooks for the plugin.
+	 * @var      Yemot_Loader    $loader    Maintains and registers all hooks for the plugin.
 	 */
 	protected $loader;
 
@@ -67,12 +67,12 @@ class Replace_name {
 	 * @since    1.0.0
 	 */
 	public function __construct() {
-		if ( defined( 'REPLACE_NAME_VERSION' ) ) {
-			$this->version = REPLACE_NAME_VERSION;
+		if ( defined( 'YEMOT_VERSION' ) ) {
+			$this->version = YEMOT_VERSION;
 		} else {
 			$this->version = '1.0.0';
 		}
-		$this->plugin_name = 'replace_name';
+		$this->plugin_name = 'yemot';
 
 		$this->load_dependencies();
 		$this->set_locale();
@@ -84,7 +84,7 @@ class Replace_name {
 	}
 	private function add_updater(){
         require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-updater.php';
-        new WebDuckUpdater_replace_name(
+        new WebDuckUpdater_yemot_yemot_yemot(
 			$this->get_plugin_name(), 
 			$this->get_version() ,
 			 "moshepollak",
@@ -99,10 +99,10 @@ class Replace_name {
 	 *
 	 * Include the following files that make up the plugin:
 	 *
-	 * - Replace_name_Loader. Orchestrates the hooks of the plugin.
-	 * - Replace_name_i18n. Defines internationalization functionality.
-	 * - Replace_name_Admin. Defines all hooks for the admin area.
-	 * - Replace_name_Public. Defines all hooks for the public side of the site.
+	 * - Yemot_Loader. Orchestrates the hooks of the plugin.
+	 * - Yemot_i18n. Defines internationalization functionality.
+	 * - Yemot_Admin. Defines all hooks for the admin area.
+	 * - Yemot_Public. Defines all hooks for the public side of the site.
 	 *
 	 * Create an instance of the loader which will be used to register the hooks
 	 * with WordPress.
@@ -116,33 +116,33 @@ class Replace_name {
 		 * The class responsible for orchestrating the actions and filters of the
 		 * core plugin.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-replace_name-loader.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-yemot-loader.php';
 
 		/**
 		 * The class responsible for defining internationalization functionality
 		 * of the plugin.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-replace_name-i18n.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-yemot-i18n.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-replace_name-admin.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-yemot-admin.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the public-facing
 		 * side of the site.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-replace_name-public.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-yemot-public.php';
 
-		$this->loader = new Replace_name_Loader();
+		$this->loader = new Yemot_Loader();
 
 	}
 
 	/**
 	 * Define the locale for this plugin for internationalization.
 	 *
-	 * Uses the Replace_name_i18n class in order to set the domain and to register the hook
+	 * Uses the Yemot_i18n class in order to set the domain and to register the hook
 	 * with WordPress.
 	 *
 	 * @since    1.0.0
@@ -150,7 +150,7 @@ class Replace_name {
 	 */
 	private function set_locale() {
 
-		$plugin_i18n = new Replace_name_i18n();
+		$plugin_i18n = new Yemot_i18n();
 
 		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
 
@@ -165,7 +165,7 @@ class Replace_name {
 	 */
 	private function define_admin_hooks() {
 
-		$plugin_admin = new Replace_name_Admin( $this->get_plugin_name(), $this->get_version() );
+		$plugin_admin = new Yemot_Admin( $this->get_plugin_name(), $this->get_version() );
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
@@ -181,7 +181,7 @@ class Replace_name {
 	 */
 	private function define_public_hooks() {
 
-		$plugin_public = new Replace_name_Public( $this->get_plugin_name(), $this->get_version() );
+		$plugin_public = new Yemot_Public( $this->get_plugin_name(), $this->get_version() );
 
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
@@ -212,7 +212,7 @@ class Replace_name {
 	 * The reference to the class that orchestrates the hooks with the plugin.
 	 *
 	 * @since     1.0.0
-	 * @return    Replace_name_Loader    Orchestrates the hooks of the plugin.
+	 * @return    Yemot_Loader    Orchestrates the hooks of the plugin.
 	 */
 	public function get_loader() {
 		return $this->loader;

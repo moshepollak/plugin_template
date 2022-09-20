@@ -69,9 +69,9 @@ function scandDir($target) {
 
 function castom_replase( $name ,$str ){
     // if(isset($_POST['description']))
-    // $str = str_replace("description_replace", $_POST['description']  ,$str);
+    // $str = str_replace("כנל", $_POST['description']  ,$str);
     // if(isset($_POST['display_name']))
-    // $str = str_replace("display_name_replace", $_POST['display_name']  ,$str);
+    // $str = str_replace("סנכרון ימות המשיח לטופס אלמנטור", $_POST['display_name']  ,$str);
 
     
     $str = str_replace("WebDuckUpdater", "WebDuckUpdater_".$name ,$str);
